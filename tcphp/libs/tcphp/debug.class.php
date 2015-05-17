@@ -5,6 +5,7 @@
 */
 
 //调试处理类
+namespace tcphp;
 class debug{
 	static $debug = array();//存储错误信息
 	

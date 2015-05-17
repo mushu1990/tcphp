@@ -37,8 +37,7 @@
     }
     
     mkdirs();
-    C(require PHP_PATH.'/libs/etc/init.config.php');
-   
+    C(require PHP_PATH.'/config/init.config.php');
 
   	
   }

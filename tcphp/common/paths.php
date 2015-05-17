@@ -1,7 +1,7 @@
 <?php
 
   //配置框架的目录结构
-  define( "CACHE_DIR" , "cache"); //缓存目录
+  define( "CACHE_DIR" , "caches"); //缓存目录
   define( "LOG_DIR", "log") ; //日志目录
   define( "CONFIG_DIR", "config") ; //配置目录
   define( "TEMPLATE_DIR", "template") ;  //模板目录

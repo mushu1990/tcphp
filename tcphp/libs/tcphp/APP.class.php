@@ -9,6 +9,10 @@ class APP{
      //动作方法
      static  $action ;
      
+
+     //类的路径映射数组
+     static  $classmaps = array();
+     
       /**
         * run方法
         * @access public
@@ -16,7 +20,7 @@ class APP{
         * 2015-5-8下午9:36:52
         */
       static function run () {
-      	spl_autoload_register (array(__CLASS__ , "autoload"));
+      	spl_autoload_register ('APP::autoload');
       	//register_shutdown_function( "APP::fatalError" );
       	//set_error_handler("APP::appError");
       	//set_exception_handler( "APP::appException" );
@@ -50,7 +54,10 @@ class APP{
       	 if( is_file($config_file)){
       	 	C(require $config_file);
       	 }
-
+         //加载类映射配置
+         $a = PHP_PATH.'/'.'common/'.'classmaps.php';
+         self::$classmaps = require $a;
+       
       }
       
        /**
@@ -102,8 +109,25 @@ class APP{
          * @return void
          * 2015-5-8下午9:43:21
          */
-      static  function  autoload ( $classname ){
-      		$classfile = PHP_PATH . '/libs/bin/' . $classname. '.class.php' ;
+      static  function  autoload ( $classname){
+         
+          //检查是否存在类映射
+          if(isset(self::$classmaps[$classname])){
+            $filepath = self::$classmaps[$classname];
+
+          }else{//按照命名空间去加载
+            //类名是tcphp\app, strstr函数后得到tcphp
+            $name = strstr($classname, '\\', true);
+            //查找此命名空间是否在已经定义的命名空间数组内
+            if(in_array($name, array('tcphp','ventor'))){
+                $path = PHP_PATH.'/'.'libs/';
+            }
+            $filepath = $path.str_replace('\\', '/', $classname);
+            
+
+
+          }
+      	  $classfile = $filepath.'.class.php' ;
           loadFile($classfile);
       		
       		

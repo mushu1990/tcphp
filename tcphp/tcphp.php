@@ -17,14 +17,20 @@
 	  run_time("start");
 	  //项目初始化
 	  defined('APP_PATH') or define('APP_PATH',dirname($_SERVER['SCRIPT_FILENAME']));
-	  //die(APP_PATH);
+	  
 	  //框架主目录
 	  define( "PHP_PATH", dirname(__FILE__));
-	  die(PHP_PATH);
+
+	  //定义框架的资源目录
+	  define('STATICS', APP_PATH. '/'. 'statics');
+
+	  define('TEMP_PATH', APP_PATH.'/'.'temp');
+
+
+	  
 	 
 	 
-	  //临时目录
-	  define( "TEMP_PATH" , APP_PATH. '/temp') ;
+	 
 	  //加载编译文件
 	  $runtime_file = TEMP_PATH . ' /runtime.php ' ;
 	  if( is_file($runtime_file)){

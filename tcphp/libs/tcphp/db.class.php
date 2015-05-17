@@ -1,7 +1,7 @@
 <?php
 		//mysql数据库链接类
-     
-     	class mysql{
+     namespace tcphp;
+     	class db{
 
      		//数据库配置信息
      		protected $config = '';

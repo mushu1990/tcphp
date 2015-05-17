@@ -7,9 +7,11 @@
 //index控制器
  class indexControl{
  	public  function  init(){
- 		trigger_error("Cannot divide by zero", E_USER_ERROR);
+ 		//trigger_error("Cannot divide by zero", E_USER_ERROR);
  			
  		echo "这是第一个控制器方法";
+
+        $a = new tcphp\db();
  	}
 
     public function strreplace(){

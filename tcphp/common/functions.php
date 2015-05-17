@@ -42,7 +42,7 @@ function loadFile($filename=''){
 			$fileArr[$filename] = true;
 			$mag =$filename. "文件载入成功";
 		}
-		call_user_func_array(array("debug","msg"), array($mag));
+		call_user_func_array(array("tcphp\\debug","msg"), array($mag));
 		
 	}else{
 		return $fileArr[$filename];
@@ -184,6 +184,12 @@ function loadFile($filename=''){
         return strlen($str);
     } 
 
+
+  }
+
+  //编译文件
+  function compile($filename){
+      
 
   }
 
