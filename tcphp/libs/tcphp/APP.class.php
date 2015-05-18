@@ -50,10 +50,15 @@ class APP{
 
       //初始化配置文件处理
       static function config(){
-      	 $config_file = CONFIG_PATH. '/config.php';
-      	 if( is_file($config_file)){
-      	 	C(require $config_file);
-      	 }
+        //加载访问应用的配置文件
+       $files = tcphp\file::dir_list(CONFIG_PATH,'php');
+
+      	foreach ($files as $key => $config_file) {
+            if( is_file($config_file)){
+            C(require $config_file);
+         }
+        }
+      
          //加载类映射配置
          $a = PHP_PATH.'/'.'common/'.'classmaps.php';
          self::$classmaps = require $a;

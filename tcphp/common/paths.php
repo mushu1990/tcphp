@@ -6,7 +6,7 @@
   define( "CONFIG_DIR", "config") ; //配置目录
   define( "TEMPLATE_DIR", "template") ;  //模板目录
   define( "TPL_DIR", "tpl") ; //模板编译目录
-  define( "MODULE_DIR", "blog"); //定义模块目录 
+  define( "MODULE_DIR", "blog"); //定义应用目录 
   
   
   define( "CACHE_PATH", TEMP_PATH . '/' .CACHE_DIR) ; 

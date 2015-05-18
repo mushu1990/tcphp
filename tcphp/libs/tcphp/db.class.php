@@ -23,7 +23,10 @@
      		 // 返回或者影响记录数
             protected $numRows    = 0;
 
-     		//架构函数 读取数据库配置信心
+            // 查询表达式
+    protected $selectSql  = 'SELECT%DISTINCT% %FIELD% FROM %TABLE%%JOIN%%WHERE%%GROUP%%HAVING%%ORDER%%LIMIT% %UNION%%COMMENT%';
+
+     		//架构函数 读取数据库配置信息
      		public function __construct($config=""){
      			//首先判断是否支持mysql扩展
      			if(!extension_loaded('mysql')){
@@ -283,6 +286,21 @@
 
 			}
 
+            /*
+                table分析
+            */
+
+            public function parseTable($tables){
+
+            if(is_string($tables)){
+            $tables  =  explode(',',$tables);
+            array_walk($tables, array(&$this, 'parseKey'));
+            }
+            $tables = implode(',',$tables);
+            return $tables;
+
+            }
+
 			/*
 			分析values，即把数组的values转换成字符串的values
 			$values的形式可以有多种，因为在sql中字段可以比value多
@@ -307,9 +325,14 @@
 			*/
 			public function parseWhere($where){
 				$whereStr = '';
-				if(is_string($whereStr)){
+				if(is_string($where)){
 					$whereStr = $where;
-				}else{//使用数组形式
+				}
+
+                
+                else{
+                    /*
+                    //使用数组形式
 					//先判断使用的逻辑运算符
 					$operate = isset($where['_logic'])?strtoupper($where['_logic']):'';
 					if(in_array($operate, array('AND','OR','XOR'))){
@@ -328,9 +351,11 @@
 							$whereStr .= $this->parseThinkWhere($key,$val);
 						}
 					}
+                    */
 
 				}
 
+                return " WHERE ".$whereStr;
 
 
 			}
@@ -351,6 +376,7 @@
 					$joinStr = ' '.implode(' ', $join).' ';
 				}
 				return $joinStr;
+
 
 			}
 
@@ -408,10 +434,13 @@
 
 			/*
 			插入操作
+            @param1: 要插入的数据，数组形式
+            @param2: 各种条件(where,order等，数组形式)
+            @param3: 是正常插入还是替换模式插入
 			*/
 			public function insert($data, $options=array(), $replace=false){
 				$values = $fields = array();
-				$this->model = $options['model'];
+				
 				/*
 				这里$data变量可以有两种形式
 				第一种是$data = array('name'=>'tom')
@@ -438,6 +467,8 @@
 
 			/*
 			更新操作
+            @param1: 要插入的数据，数组形式
+            @param2: 各种条件(where,order等，数组形式)
 			*/
 			public function update($data,$options){
 				$this->model = $options['model'];
@@ -455,6 +486,8 @@
 
 			/*
 			删除操作
+
+            @param1: 各种条件(where,order等，数组形式)
 			*/
 			public  function delete($options=array()){
 				$this->model = $options['model'];
@@ -484,7 +517,7 @@
             2：在buildselectsql方法中加入了sql缓存
 			*/
 			public function select($options=array()){
-				$this->model = $options['model'];
+				//$this->model = $options['model'];
 				$sql = $this->buildSelectSql($options);
 				$result = $this->query($sql);
 				return $result;
@@ -508,18 +541,22 @@
 				/*
 				首先对$options进行md5加密，作为key去缓存中查是否有对应的value，有的话说明有sql缓存。
 				*/
-				if(C(DB_SQL_BUILD_CACHE)){
+				/*
+                if(C(DB_SQL_BUILD_CACHE)){
 					$key = md5(serialize($options));
 					$value = S($key);
 					if(false!==$value){
 						return $value;
 					}
 				}
+                */
 
 				$sql = $this->parseSql($this->selectSql, $options);
+                /*
 				if(!isset($key)){
 					S($key,$sql,array('expire'=>0, 'length'=>C('DB_SQL_BUILD_LENGTH'),'quene'=>C('DB_SQL_BUILD_QUENE')));
 				}
+                */
 				return $sql;
 
 
@@ -533,17 +570,17 @@
 				$sql  = str_replace(array('%TABLE%','%DISTINCT%','%FIELD%','%JOIN%','%WHERE%','%GROUP%','%HAVING%','%ORDER%','%LIMIT%','%UNION%','%COMMENT%'),  array(
                 $this->parseTable($options['table']),
                 $this->parseDistinct(isset($options['distinct'])?$options['distinct']:false),
-                $this->parseField(!empty($options['field'])?$options['field']:'*'),
+                $this->parseFileds(!empty($options['field'])?$options['field']:'*'),
                 $this->parseJoin(!empty($options['join'])?$options['join']:''),
                 $this->parseWhere(!empty($options['where'])?$options['where']:''),
                 $this->parseGroup(!empty($options['group'])?$options['group']:''),
                 $this->parseHaving(!empty($options['having'])?$options['having']:''),
                 $this->parseOrder(!empty($options['order'])?$options['order']:''),
                 $this->parseLimit(!empty($options['limit'])?$options['limit']:''),
-                $this->parseUnion(!empty($options['union'])?$options['union']:''),
+                //$this->parseUnion(!empty($options['union'])?$options['union']:''),
                 $this->parseComment(!empty($options['comment'])?$options['comment']:'')
             ), $sql);
-
+                
 				return $sql;
 
 			}

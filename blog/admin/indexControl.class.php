@@ -43,4 +43,20 @@ foreach($test as $v){
         $count = str_len($str);
         echo $count;
     }
+    
+
+    public function db(){
+        //定义连接数据库配置文件
+        $config =C('default');
+        $db = new tcphp\db($config);
+        $db->connect();
+        $options = array('where'=>'cid>3','table'=>'blog_channel','field'=>'cid,ctitle');
+        $result = $db->select($options);
+        dump($result);
+
+
+
+    }
+
+
  }
