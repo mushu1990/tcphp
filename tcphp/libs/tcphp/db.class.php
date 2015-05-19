@@ -471,7 +471,7 @@
             @param2: 各种条件(where,order等，数组形式)
 			*/
 			public function update($data,$options){
-				$this->model = $options['model'];
+				//$this->model = $options['model'];
 				$sql = 'update'
 				   .$this->parseTable($options['table'])
 				   .$this->parseSet($data)
