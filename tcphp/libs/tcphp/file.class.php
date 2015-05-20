@@ -34,7 +34,7 @@
         	foreach ($arr as $str)
         	{
             	$aimDir .= $str . '/';
-            	if (!file_exists($aimDir))
+            	if (!is_dir($aimDir))
             	{
                 	mkdir($aimDir);
             	}

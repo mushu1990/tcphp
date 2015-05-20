@@ -130,6 +130,7 @@
 			获得数据表的字段信息
 			*/
 			public function getFields($tableName){
+               
 				$sqlstr = "SHOW FULL COLUMNS FROM ".$tableName."";
 				$result = $this->query($sqlstr);
 				$info  =array();
@@ -327,6 +328,7 @@
 				$whereStr = '';
 				if(is_string($where)){
 					$whereStr = $where;
+
 				}
 
                 
@@ -580,7 +582,7 @@
                 //$this->parseUnion(!empty($options['union'])?$options['union']:''),
                 $this->parseComment(!empty($options['comment'])?$options['comment']:'')
             ), $sql);
-                
+              
 				return $sql;
 
 			}

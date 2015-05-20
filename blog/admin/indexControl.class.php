@@ -5,6 +5,7 @@
 */
 
 //index控制器
+use tcphp;
  class indexControl{
  	public  function  init(){
  		//trigger_error("Cannot divide by zero", E_USER_ERROR);
@@ -56,6 +57,19 @@ foreach($test as $v){
 
 
 
+    }
+
+    public  function model(){
+        $model = new  tcphp\model('channel','blog_');
+        $data = $model->get_fields();
+        dump($data);
+        $model->name = 'mushu';
+        echo $model->name;
+        $count  = $model->count(array('where'=>'cid>1'));
+        echo $count;
+    }
+    public function file(){
+        tcphp\file::createDir("C:\\Users\\mushu123\\Desktop\\asass\\asas");
     }
 
 

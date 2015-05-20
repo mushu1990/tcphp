@@ -29,13 +29,14 @@ class model{
     *$model = new model('user');//表示实例化一个model，此model关联的是数据库表user
     *$model = new usermodel();//表示实例化一个usermodel，关联的user表
      */
-    function __construct($tablename = '',$tablePrefix = '',$dbconfig=''){
+    function __construct($tablename = '',$tablePrefix = '',$dbconfig='default'){
         if(!empty($tablename)) $this->tablename = $tablename;
         if(!empty($tablePrefix)) $this->tablePrefix = $tablePrefix;
         if(!empty($dbconfig)) $this->dbconfig = $dbconfig;
 
         $config = C($this->dbconfig);
         $this->db = new db($config);
+        $this->db->connect();
     }
     
 
@@ -79,7 +80,7 @@ class model{
     执行select查询
      */
     public function select($options=array()){
-
+ $options['table'] = $this->tablePrefix.$this->tablename;
         return $this->db->select($options);
 
 
@@ -90,10 +91,11 @@ class model{
     执行add
      */
     public function add($data='', $options=array(),$replace=false){
+         $options['table'] = $this->tablePrefix.$this->tablename;
         if(empty($data)){
             $data = $this->data;
         }
-        return $this->db->insert($data, $options));
+        return $this->db->insert($data, $options);
 
 
     }
@@ -103,6 +105,7 @@ class model{
     执行删除操作
      */
     public function delete($options=array()){
+         $options['table'] = $this->tablePrefix.$this->tablename;
 
         return $this->db->delete($options);
 
@@ -113,6 +116,7 @@ class model{
     执行更新操作
      */
     public function update($options = array()){
+         $options['table'] = $this->tablePrefix.$this->tablename;
          return $this->db->update($options);
     }
 
@@ -135,6 +139,7 @@ class model{
      */
     public function get_one($options = array()){
         $options['limit'] = " limit 1 ";
+         $options['table'] = $this->tablePrefix.$this->tablename;
         return $this->select($options);
 
     }
@@ -143,13 +148,15 @@ class model{
     计算记录数
      */
     public function count($options=array()){
+        $options['table'] = $this->tablePrefix.$this->tablename;
         $options['field'] = " count(*) as num ";
-        return $this->get_one($options);
-
+        $data = $this->select($options);
+        return $data[0]['num'];
     }
 
     //返回分页数据和分页码
     public function listinfo($options=array(),$page=1,$pagesize=20){
+         $options['table'] = $this->tablePrefix.$this->tablename;
         $count = $this->count($options);
         $page = max(intval($page),1);
         $offect = $pagesize*($page-1);
