@@ -1,6 +1,6 @@
 <?php
 //文件操作工具类
-    namespace tcphp;
+  namespace tcphp;
 	class file
 	{
         //检查目录或文件是否存在

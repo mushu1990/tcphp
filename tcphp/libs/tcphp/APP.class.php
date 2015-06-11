@@ -27,12 +27,14 @@ class APP{
         self::init();
        
       		//组合出执行的文件路径
-      		$control_file = MODULE_PATH . '/' . self::$module . '/' .self::$control . C('CONTROL_FIX').C('CLASS_FIX');
+      		$control_file = APPLICATION_PATH . '/' . self::$module . '/' .self::$control . C('CONTROL_FIX').C('CLASS_FIX');
       		$class_file = self::$control . C('CONTROL_FIX');
       	
-      	
+      	     
       		loadFile($control_file);
       		$control_obj = O($class_file);
+            
+
       		$action = self::$action;
       		$control_obj -> $action();
 		
@@ -41,22 +43,27 @@ class APP{
 
       //初始化配置
       static function init(){
+        //加载配置文件
       	self:: config();
+        //url请求处理
+        tcphp\url::parse();
+        //获得mvc参数
       	self::$module = self::module();
       	self::$control = self::control();
-      	self::$action = self::action();
+
+        self::$action = self::action();
 
       }
 
       //初始化配置文件处理
-      static function config(){
+      private static function config(){
         //加载访问应用的配置文件
-       $files = tcphp\file::dir_list(CONFIG_PATH,'php');
+        $files = tcphp\file::dir_list(CONFIG_PATH,'php');
 
       	foreach ($files as $key => $config_file) {
             if( is_file($config_file)){
             C(require $config_file);
-         }
+             }
         }
       
          //加载类映射配置
@@ -72,8 +79,9 @@ class APP{
          * 2015-5-9下午8:21:00
          */
       private  static function module(){
-      	  if( isset($_GET['m']) && !empty($_GET['m'])){
-      	  	  return $_GET['m'];
+          $m = C("VAR_MODULE");
+      	  if( isset($_GET[$m]) && !empty($_GET[$m])){
+      	  	  return $_GET[$m];
       	  }
       	  
       	  return C( "DEFAULT_MODULE" );
@@ -87,8 +95,9 @@ class APP{
        * 2015-5-9下午8:21:00
        */
       private  static function  control(){
-      	if( isset($_GET['c']) && !empty($_GET['c'])){
-      		return $_GET['c'];
+        $c = C("VAR_CONTROLLER");
+      	if( isset($_GET[$c]) && !empty($_GET[$c])){
+      		return $_GET[$c];
       	}
       	 
       	return C( "DEFAULT_CONTROL" );
@@ -101,8 +110,9 @@ class APP{
        * 2015-5-9下午8:21:00
        */
       private  static function  action(){
-      	if( isset($_GET['a']) && !empty($_GET['a'])){
-      		return $_GET['a'];
+        $a = C("VAR_ACTION");
+      	if( isset($_GET[$a]) && !empty($_GET[$a])){
+      		return $_GET[$a];
       	}
       	 
       	return C( "DEFAULT_ACTION" );

@@ -17,6 +17,8 @@
 	  run_time("start");
 	  //项目初始化
 	  defined('APP_PATH') or define('APP_PATH',dirname($_SERVER['SCRIPT_FILENAME']));
+      //定义应用
+      define('APPLICATION_DIR','blog');
 	  
 	  //框架主目录
 	  define( "PHP_PATH", dirname(__FILE__));
@@ -27,8 +29,13 @@
 	  define('TEMP_PATH', APP_PATH.'/'.'temp');
 
 
-	  
-	 
+	  // URL 模式定义
+      const URL_COMMON        =   0;  //普通模式
+      const URL_PATHINFO      =   1;  //PATHINFO模式
+      const URL_REWRITE       =   2;  //REWRITE模式
+      const URL_COMPAT        =   3;  // 兼容模式
+
+	  define('_PHP_FILE_',    rtrim($_SERVER['SCRIPT_NAME'],'/'));
 	 
 	 
 	  //加载编译文件
