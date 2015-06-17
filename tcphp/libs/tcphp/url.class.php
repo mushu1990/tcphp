@@ -22,7 +22,8 @@ class url{
         $a = C("VAR_ACTION");
         //兼容模式的参数变量
         $s = C("VAR_PATHINFO");
-
+        //如果不是一般模式，则再执行下面的代码
+        if(!$_GET[$m] && !$_GET[$c] && !$_GET[$a]){
         //首先判断是否是兼容模式
         if(!empty($_GET[$s])){
             $_SERVER['PATH_INFO'] = $_GET[$s];
@@ -147,6 +148,7 @@ class url{
         //合并到get超全局变量中
         $_GET = array_merge($var, $_GET);
         }
+    }
        
         
         

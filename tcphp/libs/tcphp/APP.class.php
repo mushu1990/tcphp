@@ -25,12 +25,12 @@ class APP{
       	//set_error_handler("APP::appError");
       	//set_exception_handler( "APP::appException" );
         self::init();
-       
+        tcphp\session::start();
       		//组合出执行的文件路径
-      		$control_file = APPLICATION_PATH . '/' . self::$module . '/' .self::$control . C('CONTROL_FIX').C('CLASS_FIX');
+      		$control_file = APPLICATION_PATH . '/' . self::$module . '/' .C("DEFAULT_C_LAYER").'/'.self::$control . C('CONTROL_FIX').C('CLASS_FIX');
       		$class_file = self::$control . C('CONTROL_FIX');
-      	
-      	     
+      	    
+      	   
       		loadFile($control_file);
       		$control_obj = O($class_file);
             
@@ -125,8 +125,8 @@ class APP{
          * 2015-5-8下午9:43:21
          */
       static  function  autoload ( $classname){
-         
-          //检查是否存在类映射
+        
+         //检查是否存在类映射
           if(isset(self::$classmaps[$classname])){
             $filepath = self::$classmaps[$classname];
 
@@ -134,7 +134,7 @@ class APP{
             //类名是tcphp\app, strstr函数后得到tcphp
             $name = strstr($classname, '\\', true);
             //查找此命名空间是否在已经定义的命名空间数组内
-            if(in_array($name, array('tcphp','ventor'))){
+            if(in_array($name, array('tcphp','vendor'))){
                 $path = PHP_PATH.'/'.'libs/';
             }
             $filepath = $path.str_replace('\\', '/', $classname);
@@ -143,6 +143,7 @@ class APP{
 
           }
       	  $classfile = $filepath.'.class.php' ;
+         
           loadFile($classfile);
       		
       		

@@ -10,7 +10,7 @@
     <title></title>
 </head>
 <body>
-<h1><?php  echo "操作失败:".$message; ?></h1>
+<h1><?php  echo "操作成功:".$message; ?></h1>
 <p class="jump">
 页面自动 <a id="href" href="<?php echo($jumpUrl); ?>">跳转</a> 等待时间： <b id="wait"><?php echo($waitSecond); ?></b>
 </p>

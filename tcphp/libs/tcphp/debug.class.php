@@ -12,7 +12,7 @@ class debug{
 	//存储错误信息到静态数组变量中
 	public static function msg($msg){
 		self::$debug[] = $msg;
-		self:: show();
+		//self:: show();
 	}
 	
 	 /**
@@ -26,7 +26,7 @@ class debug{
 		self::$debug[] = run_time("start", "end");
 		echo "<div style='border:solid 2px #dcdcdc'>";
 		foreach (self::$debug as $v){
-			echo $v;
+			echo $v."<br>";
 		}
 		echo "</div>";
 	}
