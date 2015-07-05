@@ -23,7 +23,7 @@ class url{
         //兼容模式的参数变量
         $s = C("VAR_PATHINFO");
         //如果不是一般模式，则再执行下面的代码
-        if(!$_GET[$m] && !$_GET[$c] && !$_GET[$a]){
+        if(!isset($_GET[$m]) || !isset($_GET[$c]) || !isset($_GET[$a])){
         //首先判断是否是兼容模式
         if(!empty($_GET[$s])){
             $_SERVER['PATH_INFO'] = $_GET[$s];
@@ -130,7 +130,7 @@ class url{
         if(''!=$_SERVER['PATH_INFO'] && (!C('URL_ROUTER_ON') || ! route::checkRoute())){
        $paths  =   explode($depr,trim($_SERVER['PATH_INFO'],$depr));
         //获取控制器
-        if(!defined(BIND_CONTROLLER)){
+        if(!defined("BIND_CONTROLLER")){
             $_GET[$c]   =   array_shift($paths);
         }
         // 获取操作

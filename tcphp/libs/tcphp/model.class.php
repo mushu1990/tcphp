@@ -8,7 +8,7 @@ class model{
 
 
     //数据对象存储数组
-    protected $data = array();
+    public $data = array();
 
     //数据库操作实例对象
     protected $db = null;
@@ -80,7 +80,7 @@ class model{
     执行select查询
      */
     public function select($options=array()){
- $options['table'] = $this->tablePrefix.$this->tablename;
+        $options['table'] = $this->tablePrefix.$this->tablename;
         return $this->db->select($options);
 
 
@@ -115,9 +115,9 @@ class model{
     
     执行更新操作
      */
-    public function update($options = array()){
+    public function update($data = array(),$options = array()){
          $options['table'] = $this->tablePrefix.$this->tablename;
-         return $this->db->update($options);
+         return $this->db->update($data,$options);
     }
 
     /*
@@ -126,6 +126,7 @@ class model{
      当$select设置为false的时候表示执行模式，返回受影响的记录数
      */
     public function excute($sql,$select=true){
+       
         if($select){
             return $this->db->query($sql);
         }else{

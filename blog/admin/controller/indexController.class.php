@@ -5,8 +5,33 @@
 */
 
 //index控制器
+namespace app\admin\controller;
+use app\admin\model\menumodel;
 
-class indexController extends tcphp\controller{
+
+class indexController extends adminController{
+
+
+    //后台首页
+    public function main(){
+       //获取顶级菜单列表
+       $menumodel = new menumodel("admin_menus");
+       $data = $menumodel->getMenusByPid(0);
+       $this->assign("menus",$data);
+       $this->display();
+    }
+
+    //左侧菜单
+    public function menus(){
+        $menuid = $_GET['menuid'];
+        $menumodel  = new menumodel("admin_menus");
+        $data = $menumodel->getMenusByPid($menuid);
+        //获取本身
+        $self = $menumodel->excute("select * from admin_menus where menuid=$menuid");
+        $this->assign("menus",$data);
+        $this->assign("self",$self[0]['name']);
+        $this->display();
+    }
  	public  function  init(){
  		//trigger_error("Cannot divide by zero", E_USER_ERROR);
  			

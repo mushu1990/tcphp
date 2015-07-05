@@ -64,6 +64,7 @@
         "DATA_CACHE_TIME"=>'0',
         "DATA_CACHE_COMPRESS"=>true,
         "DATA_CACHE_CHECK"=>true,
+        "DEFAULT_AJAX_RETURN"=>"JSON",
 
   	);
 

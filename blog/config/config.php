@@ -6,7 +6,7 @@
 
 return array(
 		"hostname"=>"127.0.0.1",
-		"dbname" => "blog",
+		"dbname" => "tcphpcms",
 		"username" => "root",
 		"password" => "root",
 		

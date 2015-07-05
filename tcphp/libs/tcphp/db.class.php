@@ -356,9 +356,11 @@
                     */
 
 				}
-
+                if(empty($whereStr)){
+                  return "";
+                }else{
                 return " WHERE ".$whereStr;
-
+                }
 
 			}
 
@@ -381,6 +383,15 @@
 
 
 			}
+
+            protected function parseSet($data) {
+        foreach ($data as $key => $value) {
+           $set[]  =   $this->parseKey($key).'='.$this->parseValues($value);
+                    
+       
+        }
+           return ' SET '.implode(',',$set);      
+    }
 
 			/*
 			order分析
@@ -460,7 +471,7 @@
 				}
 
 				//至此为止，已经分析出了字段和值的数组
-				$sql = ($replace ? 'REPLACE' : 'INSERT').'INTO'.$this->parseTable($options['table']).' ('.implode(',', $fields).' ) values ('.implode(',', $values).')';
+				$sql = ($replace ? 'REPLACE' : 'INSERT').' INTO '.$this->parseTable($options['table']).' ('.implode(',', $fields).' ) values ('.implode(',', $values).')';
 				$sql .= $this->parseComment(!empty($options['commet'])?$options['commet']:'');
 				return $this->excute($sql);
 
@@ -474,14 +485,16 @@
 			*/
 			public function update($data,$options){
 				//$this->model = $options['model'];
-				$sql = 'update'
+                //
+				$sql = 'update '
 				   .$this->parseTable($options['table'])
 				   .$this->parseSet($data)
 				   .$this->parseWhere(!empty($options['where'])?$options['where']:'')
 				   .$this->parseOrder(!empty($options['order'])?$options['order']:'')
 				   .$this->parseLimit(!empty($options['limit'])?$options['limit']:'')
 				   .$this->parseComment(!empty($options['commet'])?$options['commet']:'');
-				return $this->excute($sql);
+				
+                return $this->excute($sql);
 
 
 			}
@@ -492,14 +505,14 @@
             @param1: 各种条件(where,order等，数组形式)
 			*/
 			public  function delete($options=array()){
-				$this->model = $options['model'];
+				
 				$sql = 'DELETE FROM '
 				  .$this->parseTable($options['table'])
 				  .$this->parseWhere(!empty($options['where'])?$options['where']:'')
 				  .$this->parseOrder(!empty($options['order'])?$options['order']:'')
 				  .$this->parseLimit(!empty($options['limit'])?$options['limit']:'')
 				  .$this->parseComment(!empty($options['commet'])?$options['commet']:'');
-
+                
 				return $this->excute($sql);
 
 
@@ -521,6 +534,7 @@
 			public function select($options=array()){
 				//$this->model = $options['model'];
 				$sql = $this->buildSelectSql($options);
+                
 				$result = $this->query($sql);
 				return $result;
 

@@ -78,10 +78,12 @@ class view{
         //如果$templateFile为空，按照默认的模块 控制器  操作进行定位
         //如果不为空，那么$templateFile必须写全  例如   模块/控制器/操作
         if(empty($templateFile)){
-            $filename = APPLICATION_PATH.'/'.$theme.'/'.MODULE_NAME.'/'.CONTROLLER_NAME.'/'.ACTION_NAME.'.php';
+            $filename = APPLICATION_PATH."/".MODULE_NAME."/".C("DEFAULT_V_LAYER").'/'.$theme.'/'.CONTROLLER_NAME.'/'.ACTION_NAME.'.php';
         }else{
-            $filename = APPLICATION_PATH.'/'.$theme.'/'.$templateFile.'.php';
+            $module = explode('/', $templateFile,2);
+            $filename = APPLICATION_PATH."/".$module[0]."/".C("DEFAULT_V_LAYER").'/'.$theme.'/'.$module[1].'.php';
         }
+       
         if(!is_file($filename)){
             die("模板文件名不存在");
         }else{

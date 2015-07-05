@@ -28,7 +28,8 @@ class APP{
         tcphp\session::start();
       		//组合出执行的文件路径
       		$control_file = APPLICATION_PATH . '/' . self::$module . '/' .C("DEFAULT_C_LAYER").'/'.self::$control . C('CONTROL_FIX').C('CLASS_FIX');
-      		$class_file = self::$control . C('CONTROL_FIX');
+      		$class_file = "app\\".self::$module."\\controller\\".self::$control . C('CONTROL_FIX');
+            
       	    
       	   
       		loadFile($control_file);
@@ -52,6 +53,10 @@ class APP{
       	self::$control = self::control();
 
         self::$action = self::action();
+
+        defined("MODULE_NAME") or define("MODULE_NAME", self::$module);
+        defined("CONTROLLER_NAME") or define("CONTROLLER_NAME", self::$control);
+        defined("ACTION_NAME") or define("ACTION_NAME", self::$action);
 
       }
 
@@ -136,8 +141,15 @@ class APP{
             //查找此命名空间是否在已经定义的命名空间数组内
             if(in_array($name, array('tcphp','vendor'))){
                 $path = PHP_PATH.'/'.'libs/';
+                $filepath = $path.str_replace('\\', '/', $classname);
+            }elseif (in_array($name, array('app'))) {
+                //模块加载
+                $filepath = APP_PATH.'/'.APPLICATION_DIR.'/'.str_replace('app\\', '' , $classname);
+                
+                
             }
-            $filepath = $path.str_replace('\\', '/', $classname);
+
+            
             
 
 

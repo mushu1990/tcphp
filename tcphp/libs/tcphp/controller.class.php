@@ -19,7 +19,7 @@ class controller{
    }
 
    //输出模板
-   public function display($templateFile){
+   public function display($templateFile=''){
 
        $this->view->display($templateFile);
 

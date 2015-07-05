@@ -19,7 +19,8 @@
 	  defined('APP_PATH') or define('APP_PATH',dirname($_SERVER['SCRIPT_FILENAME']));
       //定义应用
       define('APPLICATION_DIR','blog');
-	  
+	  //定义网站主目录
+	  defined('ROOT') or define('ROOT',dirname($_SERVER['SCRIPT_NAME']));
 	  //框架主目录
 	  define( "PHP_PATH", dirname(__FILE__));
 

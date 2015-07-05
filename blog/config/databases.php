@@ -7,7 +7,7 @@ return array(
     'default'=>array(
         'hostname' => 'localhost',
         'port' => 3306,
-        'database' => 'blog',
+        'database' => 'tcphpcms',
         'username' => 'root',
         'password' => 'root',
         'tablepre' => '',
