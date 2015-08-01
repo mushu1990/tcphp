@@ -4,11 +4,12 @@
 */
 namespace app\admin\controller;
 use tcphp\controller;
+use app\admin\model\categorymodel;
 class categoryController extends adminController
 {
     
-   //用户管理
-   public function usermanager(){
+   //栏目管理
+   public function manager(){
       if(isset($_POST['dosubmit'])){
 
       }else{
@@ -17,67 +18,97 @@ class categoryController extends adminController
       }
    }
 
-   //获取用户列表
-   public function userlists(){
+   //获取类别列表
+   public function catlist(){
       $page = isset($_POST['page']) ? intval($_POST['page']) : 1;
       $rows = isset($_POST['rows']) ? intval($_POST['rows']) : 10;
 
-      if(isset($_GET['roleid'])){
-            $roleid = intval($_GET['roleid']);
-            $where = " where admin_role.roleid = $roleid";
-      }else{
-        $where = '';
-      }
+      
 
-      $usermodel = new usermodel("admin_user");
-      $result["total"] = $usermodel->count();
+      $categorymodel = new categorymodel("admin_cat");
+      $result["total"] = $categorymodel->count();
       $offset = $rows*($page-1);
-      $data = $usermodel->excute("select userid,username,email,status,regip,rolename,admin_role.roleid from admin_user join admin_role on admin_user.roleid = admin_role.roleid $where order by userid desc limit $offset,$rows ");
+      $data = $categorymodel->excute("select *  from admin_cat  order by catid desc limit $offset,$rows ");
       foreach ($data as $key => $row) {
-          if($data[$key]['status'] == '1'){
-            $data[$key]['status'] = '正常';
+          if($data[$key]['isdisplay'] == '1'){
+            $data[$key]['isdisplay'] = '正常';
           }else{
-            $data[$key]['status'] ='禁用';
+            $data[$key]['isdisplay'] ='禁用';
           }
+
       }
       $result['rows'] = $data;
+      $result = $categorymodel->getCat("treegrid");
       $this->ajaxReturn($result);
 
    }
 
-   //添加用户
-   public function useradd(){
-      if(isset($_GET['role'])){
-        $rolemodel = new rolemodel("admin_role");
-        $data = $rolemodel->excute("select roleid, rolename from admin_role");
-        $this->ajaxReturn($data);
-
+  //添加栏目
+   public function addcat(){
+      if(isset($_GET['catid'])){
+        $categorymodel = new categorymodel("admin_cat");
+        $this->assign("catid",$_GET['catid']);
+        $this->display();
             
       }elseif (isset($_POST['dosubmit'])) {
-          $username = trim($_POST['username']);          
-          $usermodel = new usermodel('admin_user');
-          $exsituser = $usermodel->excute("select userid from admin_user where username='$username' limit 1");
+          //验证必须字段          
+          $catname = trim($_POST['catname']); 
+          if(empty($catname)){
+            $returndata = array("errorMsg"=>'验证错误，栏目名称为空');
+            $this->ajaxReturn($returndata);
+          }
+          //开始处理字段，空处理，格式转化，sql注入         
+          $categorymodel = new categorymodel('admin_cat');
 
-          if(!empty($exsituser[0]['userid'])){
-              $returndata = array("errorMsg"=>'用户名重复');
-          }else{
-          $usermodel->data['lastlogintime'] = time();
-          $usermodel->data['lastloginip'] = ip();
-          $usermodel->data['regtime'] = time();
-          $usermodel->data['regip'] = ip();
-          if(isset($_POST['username'])){$usermodel->data['username'] = $_POST['username'];}
-          if(isset($_POST['password'])){$usermodel->data['password'] = md5($_POST['username']);}
-          if(isset($_POST['email'])){$usermodel->data['email'] = $_POST['email'];}
-          if(isset($_POST['roleid'])){$usermodel->data['roleid'] = $_POST['roleid'];}
-          $row = $usermodel->add();
+          //栏目名称唯一性验证
+          $exsitcat = $categorymodel->excute("select catid from admin_cat where catname='$catname' limit 1");
+
+          if(count($exsitcat)>0){
+              $returndata = array("errorMsg"=>'栏目名称重复');
+               $this->ajaxReturn($returndata);
+          }
+          //栏目名称
+          $categorymodel->data['catname'] = $_POST['catname'];
+          //父id
+          if(isset($_POST['parentid'])){$categorymodel->data['parentid'] =intval($_POST['parentid']);}
+
+        
+          //栏目图片
+          if(isset($_FILES['img'])){
+            $status = fileUpload('img');
+           
+            if($status[0] == '0' ){
+              $returndata = array("errorMsg"=>$status[1]);
+               $this->ajaxReturn($returndata);
+            }elseif ($status[0] == '1') {
+               $image = $status[2];
+            }
+            $categorymodel->data['image'] = $image;
+          }
+          
+          if(isset($_POST['style'])){$categorymodel->data['style'] = $_POST['style'];}
+
+          if(isset($_POST['isdisplay'])){$categorymodel->data['isdisplay'] = $_POST['isdisplay'];}else{$categorymodel->data['isdisplay'] = 0;}
+
+          if(isset($_POST['keywords'])){$categorymodel->data['keywords'] = $_POST['keywords'];}
+
+        
+
+          $row = $categorymodel->add();
           if($row>0){
-             $returndata = array("successMsg"=>'用户添加成功');
+             $returndata = array("successMsg"=>'栏目添加成功');
           }else{
-             $returndata = array("errorMsg"=>'用户添加失败');
+             $returndata = array("errorMsg"=>'栏目添加失败');
           }
-          }
+          
           $this->ajaxReturn($returndata);
       }
+   }
+
+   public function getcat(){
+      $categorymodel = new categorymodel("admin_cat");
+      $result = $categorymodel->getCat("commotree");
+      $this->ajaxReturn($result);
    }
 
    //更新用户

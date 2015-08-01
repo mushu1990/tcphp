@@ -9,7 +9,7 @@ use app\admin\model\menumodel;
 class menuController extends adminController
 {
     
-   //用户管理
+   //菜单管理
    public function menumanager(){
       if(isset($_POST['dosubmit'])){
 
@@ -22,9 +22,7 @@ class menuController extends adminController
    //获取菜单列表
    public function menulists(){
       $page = isset($_POST['page']) ? intval($_POST['page']) : 1;
-      $rows = isset($_POST['rows']) ? intval($_POST['rows']) : 10;
-
-      
+      $rows = isset($_POST['rows']) ? intval($_POST['rows']) : 10;   
 
       $menumodel = new menumodel("admin_menus");
       $result["total"] = $menumodel->count();

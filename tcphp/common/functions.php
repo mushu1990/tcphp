@@ -319,6 +319,79 @@ function ip() {
     return preg_match ( '/[\d\.]{7,15}/', $ip, $matches ) ? $matches [0] : '';
 }
 
+//文件上传函数
+/*
+* @param $field 上传字段
+   * @param $alowexts 允许上传类型
+   * @param $maxsize 最大上传大小
+   * @param $overwrite 是否覆盖原有文件
+   * @param $thumb_setting 缩略图设置
+   * @param $watermark_enable  是否添加水印
+ */
+function fileUpload($field,$alowexts = array(),$maxsize = 2, $overwrite = 0,$thumb_setting = array(), $watermark_enable = 1){
+  
+  //判断上传文件是否存在
+  if(!is_uploaded_file($_FILES[$field]['tmp_name'])){
+      $status[] = '0';
+      $status[] = '上传文件不存在';
+      return $status;
+  }
+  //检查上传文件类型
+  if(empty($alowexts)){
+      $alowexts = C("FILE_TYPE");
+  }
+
+  $file = $_FILES[$field];  
+  if($maxsize*1024*1024 < $file["size"])  
+    //检查文件大小  
+    {  
+      $status[] = '0';
+      $status[] = '上传文件太大';
+      return $status;
+    }  
+  
+  if(!in_array($file["type"], $alowexts))  
+  //检查文件类型  
+  {  
+    $status[] = '0';
+    $status[] = '上传文件类型限制';
+    return $status; 
+  }  
+
+  $savepath = TEMP_PATH .'/upload/images/';
+  
+  if(!is_dir($savepath)){
+    mkdir($savepath,"0777",true);
+  }
+  //文件扩展名
+  $extend=explode(".",$file['name']);
+  $key=count($extend)-1;
+  $ext=".".$extend[$key];    
+  //构造一个随机文件名
+  $randfile = md5($file['tmp_name'].time()).$ext;
+  $destination = $savepath."/$randfile";
+
+  if (file_exists($destination) && $overwrite != 1)  
+    {  
+        $status[] = '0';
+        $status[] = '同名文件已经存在';
+        return $status;  
+    }  
+
+  if(!move_uploaded_file ($file['tmp_name'], $destination))  
+    {  
+        $status[] = '0';
+        $status[] = '移动文件出错';
+        return $status;    
+    }  
+
+   $status[] = '1';
+   $status[] = '文件上传成功';
+   $status[] = $randfile;
+   return $status;   
+
+}
+
 
 
 

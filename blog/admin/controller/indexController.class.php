@@ -23,8 +23,8 @@ class indexController extends adminController{
 
     //左侧菜单
     public function menus(){
-        $menuid = $_GET['menuid'];
-        $menumodel  = new menumodel("admin_menus");
+        $menuid = intval($_GET['menuid']);
+        $GLOBALS['menumodel'] = $menumodel  = new menumodel("admin_menus");
         $data = $menumodel->getMenusByPid($menuid);
         //获取本身
         $self = $menumodel->excute("select * from admin_menus where menuid=$menuid");

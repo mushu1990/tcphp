@@ -9,6 +9,7 @@ return array(
 		"dbname" => "tcphpcms",
 		"username" => "root",
 		"password" => "root",
+        
 		
 		
 );

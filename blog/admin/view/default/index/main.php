@@ -107,8 +107,13 @@ window.onresize = function(){
 window.onresize();
 //站点下拉菜单
 $(function(){
-	//默认载入左侧菜单
-	//$("#leftMain").load("/tcphp/index.php/admin/index/menus/menuid/0");
+	
+	$("#leftMain").load("/tcphp/index.php/admin/index/menus/menuid/34",function(){
+        //alert($("#_MP0 a").attr("data-url"));
+        $("#rightMain").attr('src', $("#_MP0 a").attr("data-url"));
+    });
+    
+   
 })
 
 //左侧开关
@@ -130,12 +135,10 @@ function _M(menuid,targetUrl) {
 
 	$("#leftMain").load("/tcphp/index.php/admin/index/menus/menuid/"+menuid, {limit: 25}, function(){
            windowW();
+           $("#rightMain").attr('src', $("#_MP0 a").attr("data-url"));
+           $('.top_menu').removeClass("on");
+           $('#_M'+menuid).addClass("on");
          });
-
-	$("#rightMain").attr('src', $("#_MP0 a").attr("data-url"));
-     $('.top_menu').removeClass("on");
-    $('#_M'+menuid).addClass("on");
-
 	
 }
 function _MP(menuid,targetUrl) {

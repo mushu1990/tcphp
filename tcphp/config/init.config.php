@@ -65,6 +65,16 @@
         "DATA_CACHE_COMPRESS"=>true,
         "DATA_CACHE_CHECK"=>true,
         "DEFAULT_AJAX_RETURN"=>"JSON",
+        //上传文件类型
+        "FILE_TYPE"=>array(  
+            'image/jpg',  
+            'image/jpeg',  
+            'image/png',  
+            'image/pjpeg',  
+            'image/gif',  
+            'image/bmp',  
+            'image/x-png'  
+        ),
 
   	);
 
